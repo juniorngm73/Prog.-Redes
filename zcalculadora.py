@@ -65,7 +65,7 @@ def calcular_subrede(ip, mascara_inicial, mascara_final):
         print(f"Último Host: {ultimo_host}")
         print(f"Endereço de Broadcast: {broadcast}")
         print(f"Máscara em Binário: {mascara_binaria}")
-        print(f"Número de Hosts Válidos: {hosts_validos}\n")
+        print(f"Número de Hosts Válidos: {hosts_validos}")
 
 def bin_to_ip(binario):
     """Converte um endereço binário para decimal com pontos."""
