@@ -1,4 +1,3 @@
-
 def validar_ip(ip):
     try:
         octetos = ip.split('.')
@@ -14,15 +13,6 @@ def validar_ip(ip):
     except ValueError:
         print(f'O endereço IP contém caracteres inválidos.')
         return False
-
-while True:
-    ip = input(' Digite um endereço IP: ')
-    if validar_ip(ip):
-        print('O endereço IP é válido.')
-        break
-    else:
-        print("O endereço IP é inválido, tente novamente.")
-
 
 
 def calcular_subrede(ip, mascara_inicial, mascara_final):
@@ -59,7 +49,7 @@ def calcular_subrede(ip, mascara_inicial, mascara_final):
         # Número de hosts válidos
         hosts_validos = 2**(32 - mascara) - 2
 
-        print(f"Máscara: {mascara}")
+        print(f"Máscara / {mascara}")
         print(f"Endereço de Rede: {endereco_rede}")
         print(f"Primeiro Host: {primeiro_host}")
         print(f"Último Host: {ultimo_host}")
@@ -67,12 +57,19 @@ def calcular_subrede(ip, mascara_inicial, mascara_final):
         print(f"Máscara em Binário: {mascara_binaria}")
         print(f"Número de Hosts Válidos: {hosts_validos}")
 
+
 def bin_to_ip(binario):
     """Converte um endereço binário para decimal com pontos."""
     return '.'.join([str(int(binario[i:i+8], 2)) for i in range(0, 32, 8)])
 
-# Exemplo de uso
-ip = input(" IP Válido, Repita o IP: ")
+
+while True:
+    ip = input(' Digite um endereço IP: ')
+    if validar_ip(ip):
+        break
+    else:
+        print("O endereço IP é inválido, tente novamente.")
+
 mascara_inicial = int(input("Máscara Inicial: "))
 mascara_final = int(input("Máscara Final: "))
 calcular_subrede(ip, mascara_inicial, mascara_final)
