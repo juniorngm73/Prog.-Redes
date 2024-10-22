@@ -5,14 +5,17 @@ def validar_ip(ip):
             return False
 
         for octeto in octetos:
-
             if  not octeto.isdigit() or not 0 <= int(octeto) <= 255:
                 return False
-
         return True
+
     except ValueError:
-        print(f'O endereço IP contém caracteres inválidos.')
         return False
+
+
+def bin_to_ip(binario):
+    """Converte um endereço binário para decimal com pontos."""
+    return '.'.join([str(int(binario[i:i+8], 2)) for i in range(0, 32, 8)])
 
 
 def calcular_subrede(ip, mascara_inicial, mascara_final):
@@ -58,13 +61,8 @@ def calcular_subrede(ip, mascara_inicial, mascara_final):
         print(f"Número de Hosts Válidos: {hosts_validos}")
 
 
-def bin_to_ip(binario):
-    """Converte um endereço binário para decimal com pontos."""
-    return '.'.join([str(int(binario[i:i+8], 2)) for i in range(0, 32, 8)])
-
-
 while True:
-    ip = input(' Digite um endereço IP: ')
+    ip = input('Digite um endereço IP: ')
     if validar_ip(ip):
         break
     else:
@@ -73,5 +71,7 @@ while True:
 mascara_inicial = int(input("Máscara Inicial: "))
 mascara_final = int(input("Máscara Final: "))
 calcular_subrede(ip, mascara_inicial, mascara_final)
+
 if __name__ == "__calcular_subrede__":
     calcular_subrede(ip, mascara_inicial, mascara_final)
+
