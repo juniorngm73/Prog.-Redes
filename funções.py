@@ -22,9 +22,8 @@ def validar_masc(mascara_inicial, mascara_final):
         Uma string com a máscara em 4 octetos.
         :param mascara_inicial:
     """
-    if not 0 <= mascara_final   <= 32:
-        raise ValueError("Número de bits inválido. Deve estar entre 0 e 32.")
-
+    if not 0 <= mascara_inicial <= mascara_final <= 32:
+        raise ValueError("As máscaras devem estar entre 0 e 32, e a inicial deve ser menor que a final.")
     # String binária com os bits '1' à esquerda e '0' à direita
 
     mascara_binaria = '1' * mascara_final + '0' * (32 - mascara_final)
