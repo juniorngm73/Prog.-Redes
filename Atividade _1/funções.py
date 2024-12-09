@@ -1,5 +1,7 @@
 import json
-def validar_ip(ip):
+
+
+def validar_ip(ip):                  # Validar o IP
     octetos = ip.split('.')
     if len(octetos) != 4:
         return False
@@ -13,16 +15,8 @@ def validar_ip(ip):
     return True
 
 
-def validar_masc(mascara_inicial, mascara_final):
-    """Converte uma máscara CIDR (sem a barra) para a representação em 4 octetos.
+def validar_masc(mascara_inicial, mascara_final):  # Validar a Máscara
 
-    Args:
-        prefixo: O número de bits '1' na máscara.
-
-    Returns:
-        Uma string com a máscara em 4 octetos.
-        :param mascara_inicial:
-    """
     if not 0 <= mascara_inicial <= mascara_final <= 32:
         raise ValueError("As máscaras devem estar entre 0 e 32, e a inicial deve ser menor que a final.")
     # String binária com os bits '1' à esquerda e '0' à direita
@@ -44,8 +38,7 @@ def validar_masc(mascara_inicial, mascara_final):
     return mascara_octetos
 
 
-def bin_to_ip(binario):
-    """Converte um endereço binário para decimal com pontos."""
+def bin_to_ip(binario):  # Converte endereço binário em decimal com pontos.
 
     octetos = []
     for i in range(0, 32, 8):
@@ -61,7 +54,6 @@ def calcular_subrede_json(ip, mascara_inicial, mascara_final):
 
 
     # Converter IP para binário
-
         ip_binario = ''
     for x in ip.split('.'):
         num_binario = bin(int(x))[2:].zfill(8)
@@ -100,14 +92,6 @@ def calcular_subrede_json(ip, mascara_inicial, mascara_final):
         resultados.append(resultado)
 
     return json.dumps(resultados, indent=4)
-
-    print(f"Máscara/{mascara}")
-    print(f"Endereço de Rede: {endereco_rede}")
-    print(f"Primeiro Host: {primeiro_host}")
-    print(f"Último Host: {ultimo_host}")
-    print(f"Endereço de Broadcast: {broadcast}")
-    print(f"Máscara em Binário: {mascara_binaria}")
-    print(f"Número de Hosts Válidos: {hosts_validos}")
 
 
 while True:
