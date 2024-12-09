@@ -1,3 +1,4 @@
+import json
 def validar_ip(ip):
     octetos = ip.split('.')
     if len(octetos) != 4:
@@ -54,19 +55,14 @@ def bin_to_ip(binario):
     mascara_ip = '.'.join(octetos)
     return mascara_ip
 
-def calcular_subrede(ip, mascara_inicial, mascara_final):
-    """
-    Calcula as informações de sub-rede para um intervalo de máscaras.
+def calcular_subrede_json(ip, mascara_inicial, mascara_final):
+    resultados = []
+    for mascara in range(mascara_inicial, mascara_final + 1):
 
-    Args:
-        ip (str): Endereço IP em formato decimal com pontos.
-        mascara_inicial (int): Máscara de rede inicial em notação CIDR.
-        mascara_final (int): Máscara de rede final em notação CIDR.
-    """
 
     # Converter IP para binário
 
-    ip_binario = ''
+        ip_binario = ''
     for x in ip.split('.'):
         num_binario = bin(int(x))[2:].zfill(8)
         ip_binario += num_binario
@@ -92,13 +88,26 @@ def calcular_subrede(ip, mascara_inicial, mascara_final):
         # Número de hosts válidos
         hosts_validos = 2**(32 - mascara) - 2
 
-        print(f"Máscara / {mascara}")
-        print(f"Endereço de Rede: {endereco_rede}")
-        print(f"Primeiro Host: {primeiro_host}")
-        print(f"Último Host: {ultimo_host}")
-        print(f"Endereço de Broadcast: {broadcast}")
-        print(f"Máscara em Binário: {mascara_binaria}")
-        print(f"Número de Hosts Válidos: {hosts_validos}")
+        resultado = {
+            "mascara": f"{mascara}",
+            "endereco_rede": f'{endereco_rede}',
+            "primeiro_host": f'{primeiro_host}',
+            "ultimo_host": f"{ultimo_host}",
+            "broadcast": f"{broadcast}",
+            "mascara_binaria": f"{mascara_binaria}",
+            "hosts_validos": f"{hosts_validos}"
+        }
+        resultados.append(resultado)
+
+    return json.dumps(resultados, indent=4)
+
+    print(f"Máscara/{mascara}")
+    print(f"Endereço de Rede: {endereco_rede}")
+    print(f"Primeiro Host: {primeiro_host}")
+    print(f"Último Host: {ultimo_host}")
+    print(f"Endereço de Broadcast: {broadcast}")
+    print(f"Máscara em Binário: {mascara_binaria}")
+    print(f"Número de Hosts Válidos: {hosts_validos}")
 
 
 while True:
@@ -113,7 +122,6 @@ if __name__ == "__main__":
     mascara_inicial = int(input("Máscara Inicial: "))
     mascara_final = int(input("Máscara Final: "))
     mascara_octetos = validar_masc(mascara_inicial, mascara_final)
-    calcular_subrede(ip, mascara_inicial, mascara_final)
-
-
-
+    calcular_subrede_json(ip, mascara_inicial, mascara_final)
+    resultado_json = calcular_subrede_json(ip, mascara_inicial, mascara_final)
+    print(resultado_json)
