@@ -41,27 +41,17 @@ ip1 = validar_ip('Digite o PRIMEIRO IP válido: ')
 ip2 = validar_ip('Digite o SEGUNDO IP válido: ')
 mask = int(input ("Digite o tamanho da máscara de rede (em bits): "))
 
-ip1_int = ip1.split('.')
-ip10 = 0
-for i, ip1_int in enumerate (ip1_int):
-    pot = 3 - i
-    ip10 = ip10 + int(ip1_int)* (256 ** pot)
+ip1l = [int(x) for x in ip1.split('.')]
+ip2l = [int(x) for x in ip2.split('.')]
+ip1b = bytes (ip1l)
+ip2b = bytes (ip2l)
+ip1i = int.from_bytes(ip1b)
+ip2i = int.from_bytes(ip2b)
 
+host = 32 - mask
 
-ip2_int = ip2.split('.')
-ip20 = 0
-for i, ip2_int in enumerate (ip2_int):
-    pot = 3 - i
-    ip20 = ip20 + int(ip2_int)* (256 ** pot)
-
-
-bitsHost = 32 - mask
-mask10 = ((2**32) - 1) - ((2**bitsHost) - 1)
-host_mask = (2**bitsHost) - 1
-
-net1 = ip10 & mask10
-net2 = ip20 & mask10
-
+net1 = ip1i >> host << host
+net2 = ip2i >> host << host
 
 if net1 == net2:
     print ("Mesma Rede!!!")
