@@ -1,0 +1,5 @@
+def findNoncestriong ():
+    dataToHash =
+    bitsToBeZero =
+    nonce =
+    tempo =
