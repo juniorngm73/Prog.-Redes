@@ -3,3 +3,5 @@ https://rha.ole.redhat.com/rha/app/summary
 https://exiftool.org/TagNames/EXIF.html
 
 github.com/2025-2-gbat-ProgRedes/codes
+
+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

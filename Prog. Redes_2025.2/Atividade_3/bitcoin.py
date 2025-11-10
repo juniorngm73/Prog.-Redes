@@ -25,4 +25,4 @@ findnounce("Texto maior muda o tempo?", 10)
 findnounce("Texto maior muda o tempo?", 15)
 findnounce("É possivel calcular esse?", 18)
 findnounce("É possivel calcular esse?", 19)
-findnounce("É possivel calcular esse?", 20)
+findnounce("É possivel calcular esse?", 20)cls
