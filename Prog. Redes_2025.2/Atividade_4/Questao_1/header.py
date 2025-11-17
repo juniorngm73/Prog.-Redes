@@ -1,9 +1,6 @@
-import os
-import json
-import requests
-import re
+import os, json, requests, re
 from urllib.parse import urlparse
-import sys
+
 
 # =================================================================
 # Dependência 1: Função criar_diretorio (Copiada do funcoes.py)
