@@ -91,14 +91,14 @@ def upload_github(usuario, repositorio, arquivo_envio, arq_repositorio, token, b
 GITHUB_USERNAME = "juniorngm73"
 REPO_NAME = "Prog.-Redes"
 # ATENÇÃO: COLOQUE SEU TOKEN REAL AQUI! O valor abaixo é um placeholder para o teste.
-GITHUB_TOKEN = " " 
+GITHUB_TOKEN = "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" 
 
 # Informações do Arquivo
 # Caminho local exato do arquivo
 LOCAL_FILE_PATH = "C:\\Users\\novo\\Documents\\JUNIOR\\TECNOLOGIA REDES COMPUTADORES\\Ano 2024\\SEMESTRE 2\\PROG REDES\\Projeto_Bot\\Entrega1\\client.py" 
 # Caminho de destino no repositório (PASTA/NOME_DO_ARQUIVO.ext)
 # O caminho deve ser relativo à raiz do repositório, não uma URL completa.
-GITHUB_DEST_PATH = "Prog. Redes_2025.2/client.py" 
+GITHUB_DEST_PATH = "Prog. Redes_2025.2" 
 
 # --- Setup de Exemplo (Cria um arquivo local para teste) ---
 # Certifica-se de que o diretório existe para evitar erros de criação de arquivo

@@ -3,11 +3,11 @@ import base64
 
 usuario = 'juniorngm73'
 repositorio = 'Treinamento'
-arquivo_repo = 'questao2.py'
+arquivo_repo = 'docker.txt'
+
 url = f"https://api.github.com/repos/{usuario}/{repositorio}/contents/{arquivo_repo}"
 
 response = requests.get(url)                                                          #Requisição HTTP GET para a API (retorna JSON)
-
 
 if response.status_code == 200:
     data = response.json()
