@@ -1,0 +1,20 @@
+{
+    "Content-Type": "text/html;charset=UTF-8",
+    "Content-Length": "132313",
+    "Connection": "keep-alive",
+    "Date": "Tue, 18 Nov 2025 02:20:11 GMT",
+    "Server": "marrakesh 1.25.0",
+    "Referrer-Policy": "no-referrer-when-downgrade",
+    "Content-Security-Policy": "frame-ancestors 'self' *.intranet *.uolinc.com;",
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+    "Cache-Control": "no-transform, max-age=10, must-revalidate, proxy-revalidate",
+    "Last-Modified": "Tue, 18 Nov 2025 02:20:05 GMT",
+    "ETag": "\"9622c21ec85619036c04d582982778d7\"",
+    "Expires": "Tue, 18 Nov 2025 02:20:21 GMT",
+    "Content-Encoding": "gzip",
+    "Vary": "Accept-Encoding,User-Agent",
+    "X-Cache": "Hit from cloudfront",
+    "Via": "1.1 8e4dc0b0ceb07cdf7917f8b98414b79c.cloudfront.net (CloudFront)",
+    "X-Amz-Cf-Pop": "FOR50-P6",
+    "X-Amz-Cf-Id": "dRb091DzrSkd8RXge17Magbr_vY1iwH8-grv9H3ttcteqCTQU_QNOw=="
+}
