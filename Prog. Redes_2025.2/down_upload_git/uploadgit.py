@@ -90,7 +90,7 @@ def upload_github(usuario, repositorio, arquivo_envio, arq_repositorio, token, b
 GITHUB_USERNAME = "juniorngm73"
 REPO_NAME = "Prog.-Redes"
 # ATENÇÃO: SUBSTITUA PELO SEU TOKEN REAL E VÁLIDO COM PERMISSÃO 'repo'.
-GITHUB_TOKEN = "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" 
+GITHUB_TOKEN = "" 
 
 # Informações do Arquivo
 
