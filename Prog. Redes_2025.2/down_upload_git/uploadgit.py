@@ -90,13 +90,13 @@ def upload_github(usuario, repositorio, arquivo_envio, arq_repositorio, token, b
 GITHUB_USERNAME = "juniorngm73"
 REPO_NAME = "Prog.-Redes"
 # ATENÇÃO: SUBSTITUA PELO SEU TOKEN REAL E VÁLIDO COM PERMISSÃO 'repo'.
-GITHUB_TOKEN = " " 
+GITHUB_TOKEN = "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" 
 
 # Informações do Arquivo
 
 LOCAL_FILE_DIR = "C:\\Users\\novo\\Documents\\GitHub\\Prog.-Redes\\Prog. Redes_2025.2"
 
-LOCAL_FILE_NAME = "bitcoin.txt" 
+LOCAL_FILE_NAME = "arquivo_teste.txt" 
 
 LOCAL_FILE_PATH = os.path.join(LOCAL_FILE_DIR, LOCAL_FILE_NAME)
 
