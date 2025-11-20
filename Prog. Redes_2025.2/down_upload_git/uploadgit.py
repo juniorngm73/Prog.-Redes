@@ -91,7 +91,7 @@ def upload_github(usuario, repositorio, arquivo_envio, arq_repositorio, token, b
 GITHUB_USERNAME = "juniorngm73"
 REPO_NAME = "Prog.-Redes"
 # ATENÇÃO: COLOQUE SEU TOKEN REAL AQUI! O valor abaixo é um placeholder para o teste.
-GITHUB_TOKEN = "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" 
+GITHUB_TOKEN = "" 
 
 # Informações do Arquivo
 # Caminho local exato do arquivo
