@@ -99,13 +99,6 @@ def extrair_zip(filepath):
         return None
     
 
-def ip_to_str(ip_bytes):
-    """
-    Converte 4 bytes em uma string de endereço IPv4.
-    """
-    return ".".join(map(str, ip_bytes))
-
-
 def parse_pcap(pcap_filepath):                                                 # Lê o arquivo .pcap e executa a análise solicitada.
 
     print(f"\nIniciando análise do arquivo PCAP: {pcap_filepath}...")
