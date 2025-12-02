@@ -40,7 +40,7 @@ while True:
             # Envia o tamanho do arquivo (4 bytes, big-endian)
             tam_dados = tam_arquivo.to_bytes(4, 'big')
             server_socket.sendto(tam_dados, end_cliente)
-
+            print(tam_dados)
             # Envia o conteúdo do arquivo
             with open(nome_arquivo, 'rb') as f:
                 bytes_enviados = 0
