@@ -1,0 +1,25 @@
+https://malware-traffic-analysis.net/2020/12/28/2020-12-28-1st-run-Emotet-infection-with-Trickbot.pcap.zip
+
+https://www.malware-traffic-analysis.net/2020/12/24/2020-12-24-Dridex-infection-traffic.pcap.zip
+
+https://www.malware-traffic-analysis.net/2025/08/12/2025-08-12-ten-days-of-scans-and-probes-and-web-traffic-hitting-my-web-server.pcap.zip
+
+
+
+Erro:
+
+--- Analisador de Arquivos PCAP ---
+Digite a URL completa do arquivo .zip PCAP https://www.malware-traffic-analysis.net/2025/08/12/2025-08-12-ten-days-of-scans-and-probes-and-web-traffic-hitting-my-web-server.pcap.zip
+Tentando baixar arquivo de: https://www.malware-traffic-analysis.net/2025/08/12/2025-08-12-ten-days-of-scans-and-probes-and-web-traffic-hitting-my-web-server.pcap.zip...
+Download concluído: 2025-08-12-ten-days-of-scans-and-probes-and-web-traffic-hitting-my-web-server.pcap.zip
+Tentando descompactar com a senha: infected_20250812
+Arquivo descompactado com sucesso: 2025-08-12-ten-days-of-scans-and-probes-and-web-traffic-hitting-my-web-server.pcap
+
+Iniciando análise do arquivo PCAP: 2025-08-12-ten-days-of-scans-and-probes-and-web-traffic-hitting-my-web-server.pcap...
+
+AVISO CRÍTICO: NENHUM pacote IPv4 válido foi processado. Verifique o Link Type e os Offsets.
+
+Análise PCAP falhou ou não retornou dados.
+
+Arquivo temporário removido: 2025-08-12-ten-days-of-scans-and-probes-and-web-traffic-hitting-my-web-server.pcap.zip
+Arquivo temporário removido: 2025-08-12-ten-days-of-scans-and-probes-and-web-traffic-hitting-my-web-server.pcap
