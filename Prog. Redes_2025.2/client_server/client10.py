@@ -2,7 +2,7 @@ import socket, os, sys, json
 
 
 HOST = '127.0.0.1' 
-PORT = 60000 
+PORT = 20000 
 BUFFER_SIZE = 4096
 LISTAGEM = 'Listar_Arquivos'
 
@@ -43,15 +43,15 @@ try:
         print("Solicitação muito longa. Máximo de 255 bytes.")
         sys.exit()
 
-    # 2. ENVIO DO TAMANHO DA SOLICITAÇÃO (1 byte)
+    # ENVIO DO TAMANHO DA SOLICITAÇÃO (1 byte)
     tam_dados = tam_solicitacao.to_bytes(1, 'big')
     tcp_socket.send(tam_dados)
     
-    # 3. ENVIO DA SOLICITAÇÃO
+    # ENVIO DA SOLICITAÇÃO
     tcp_socket.send(solicitacao_bytes)
     print(f" Enviado para o servidor: '{solicitacao_str}'")
 
-    # 4. RECEBIMENTO DO STATUS (1 byte)
+    # RECEBIMENTO DO STATUS (1 byte)
     status_dados = b''
     while len(status_dados) < 1:
         chunk = tcp_socket.recv(1 - len(status_dados))
@@ -61,14 +61,12 @@ try:
         
     status = int.from_bytes(status_dados, 'big')
     
-    # 5. LÓGICA DE RESPOSTA
+    # LÓGICA DE RESPOSTA
     
     if solicitacao_str == LISTAGEM:
-        ## --- LÓGICA DE LISTAGEM EM JSON (e exibição como lista de dicionários) ---
         if status == 2:
             print("  Recebendo dados JSON...")
-            
-            # RECEBIMENTO DO TAMANHO DO JSON (4 bytes)
+               
             tam_json_dados = b''
             while len(tam_json_dados) < 4:
                 chunk = tcp_socket.recv(4 - len(tam_json_dados))
@@ -77,7 +75,7 @@ try:
                 tam_json_dados += chunk
             tam_json = int.from_bytes(tam_json_dados, 'big')
             
-            # RECEBIMENTO DO CONTEÚDO JSON
+        
             json_dados = b''
             while len(json_dados) < tam_json:
                 data = tcp_socket.recv(min(BUFFER_SIZE, tam_json - len(json_dados))) 
@@ -93,12 +91,10 @@ try:
                 print("\n LISTAGEM DE ARQUIVOS :")
                 print("-" * 40)
                 
-                # O item que contém a lista de dicionários é 'arquivos_disponiveis'
+                
                 lista_de_dicionarios = dados.get('arquivos_disponiveis', [])
                 
-                # Usa 'json.dumps' para imprimir a lista de dicionários formatada e legível
                 print(json.dumps(lista_de_dicionarios, indent=4))
-                    
                 print("-" * 40)
                 print(f"Total de Arquivos: **{dados.get('total', 0)}**")
             else:
@@ -108,7 +104,7 @@ try:
              print(f" Status inesperado para listagem: {status}")
 
     else:
-        ## --- LÓGICA DE DOWNLOAD DE ARQUIVO ---
+        # DOWNLOAD DE ARQUIVO ---
         if status == 0:
             print(f"  O servidor informou que o arquivo '{solicitacao_str}' não foi encontrado.")
         elif status == 1:
@@ -130,7 +126,7 @@ try:
                 while bytes_recebidos < tam_arquivo:
                     data = tcp_socket.recv(min(BUFFER_SIZE, tam_arquivo - bytes_recebidos)) 
                     if not data:
-                        break # Conexão fechada
+                        break 
                     f.write(data)
                     bytes_recebidos += len(data)
             
