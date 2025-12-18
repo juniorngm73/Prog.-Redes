@@ -1,0 +1,49 @@
+ 
+- Como procurar imagem no docker hub?
+
+docker search <KEY>
+- Como listar imagens locais?
+docker image ls
+
+- Como remover uma imagem local?
+docker image rm <NAME | ID>
+
+- Como criar um container?
+docker run [--name NAME] <IMAGE_NAME>
+
+- Como personalizar sua própria imagem?
+a) Criar um arquivo Dockerfile com as definições
+b) docker build -t <IMAGE_NAME |IMAGE_NAME:TAG> .
+
+- Como criar um container à partir de sua imagem personalizada?
+docker run [-d -p HOST_PORT:CONTAINER_PORT --name NAME] <IMAGE>
+
+- Como listar os containers?
+docker ps [-a]
+- Como parar um container em execução?
+docker [container] stop <ID | NAME> 
+
+- Como iniciar um container parado?
+docker [container] start <NAME | ID>
+
+- Como remover um conteiner?
+docker [container] rm <ID | NAME> 
+
+--
+1. Como entrar em um container?
+docker [container] exec <NAME> <CMD>
+
+2. Como executar comandos dentro do container?
+Docker [container] exec -it <NAME| ID> <CMD> 
+Docker container exec -it asa1 bash
+
+3. Como copiar arquivos para dentro de um container?
+
+4. Como copiar arquivos para fora de um container?
+
+--
+1. Como criar uma rede?
+2. Como listar as redes disponíveis?
+3. Como adicionar um container a uma rede?
+4. Como excluir uma rede?
+
