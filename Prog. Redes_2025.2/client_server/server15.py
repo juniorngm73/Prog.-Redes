@@ -62,26 +62,40 @@ while True:
             con.sendall(json_bytes)
 
         elif operacao == 30: # UPLOAD
-            tam_nome = int.from_bytes(con.recv(4), 'big')
+            # 1. Recebe o tamanho do nome e o nome
+            dados_tam_nome = con.recv(4)
+            if not dados_tam_nome: continue
+            tam_nome = int.from_bytes(dados_tam_nome, 'big')
             nome_arquivo = con.recv(tam_nome).decode('utf-8')
-            con.send(b'\x00') 
-            tam_arquivo = int.from_bytes(con.recv(4), 'big')
-            print(f" Recebendo upload: '{nome_arquivo}' ({tam_arquivo} bytes)")
             
+            # 2. Avisa ao cliente: "Recebi o nome, pode me falar o tamanho do arquivo"
+            con.send(b'\x00') 
+            
+            # 3. Recebe o tamanho real do arquivo
+            dados_tam_arq = con.recv(4)
+            if not dados_tam_arq: continue
+            tam_arquivo = int.from_bytes(dados_tam_arq, 'big')
+            
+            print(f" Recebendo: {nome_arquivo} | Esperado: {tam_arquivo} bytes")
+            
+            # 4. Loop de gravação
             bytes_recebidos = 0
-            with open(nome_arquivo, 'wb') as f:
+            with open("RECV_" + nome_arquivo, 'wb') as f:
                 while bytes_recebidos < tam_arquivo:
+                    # Lê apenas o que falta ou o tamanho do buffer
                     chunk = con.recv(min(BUFFER_SIZE, tam_arquivo - bytes_recebidos))
-                    if not chunk: break
+                    if not chunk:
+                        break
                     f.write(chunk)
                     bytes_recebidos += len(chunk)
             
+            # 5. Confirmação final
             if bytes_recebidos == tam_arquivo:
                 con.send(b'\x00')
-                print(f" Upload de '{nome_arquivo}' concluído com sucesso.")
+                print(f" Arquivo {nome_arquivo} salvo com sucesso.")
             else:
                 con.send(b'\x01')
-                print(f" Falha no upload de '{nome_arquivo}'.")
+                print(f" Erro: Recebidos {bytes_recebidos} de {tam_arquivo}")
 
     except Exception as e:
         print(f" Erro: {e}")
