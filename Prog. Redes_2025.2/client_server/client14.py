@@ -1,12 +1,10 @@
 import socket, os, sys, json
 
-# Verificação de argumentos
 if len(sys.argv) != 2:
     print("Uso correto: python cliente.py <ip>:<porta>")
     sys.exit(1)
 
 try:
-    # Separa IP e Porta
     alvo = sys.argv[1].split(':')
     HOST = alvo[0]
     PORT = int(alvo[1])
@@ -23,27 +21,28 @@ try:
     print("\nEscolha uma opção:\n 1 - Baixar\n 2 - Listar\n 3 - Upload")
     escolha = input('Digite 1, 2 ou 3: ').strip()
 
-    # DOWNLOAD
     if escolha == '1':
-        nome_arquivo = input('Nome do arquivo: ').strip()
+        nome_arquivo = input('Digite o nome do arquivo para baixar: ').strip()
+        print(f" Enviado para o servidor: '{nome_arquivo}'")
         nome_bytes = nome_arquivo.encode('utf-8')
         tcp_socket.send(b'\x0a') 
         tcp_socket.send(len(nome_bytes).to_bytes(4, 'big'))
         tcp_socket.send(nome_bytes)
 
-        if tcp_socket.recv(1) == b'\x00': # 0 = Sucesso
+        if tcp_socket.recv(1) == b'\x00':
+            print(" Arquivo encontrado. Recebendo metadados...")
             tam_arq = int.from_bytes(tcp_socket.recv(4), 'big')
+            print(f" Tamanho total do arquivo a receber: {tam_arq} bytes.")
             with open("RECEBIDO_" + nome_arquivo, 'wb') as f:
                 recebido = 0
                 while recebido < tam_arq:
                     chunk = tcp_socket.recv(min(BUFFER_SIZE, tam_arq - recebido))
                     f.write(chunk)
                     recebido += len(chunk)
-            print(" Download completo.")
+            print(f" Download de '{nome_arquivo}' completo. Total de {recebido} bytes salvos.")
         else:
-            print(" Arquivo não encontrado.")
+            print(f" O servidor informou que o arquivo '{nome_arquivo}' não foi encontrado.")
 
-    # LISTAGEM 
     elif escolha == '2':
         tcp_socket.send(b'\x14') 
         if tcp_socket.recv(1) == b'\x00':
@@ -54,28 +53,30 @@ try:
             lista = json.loads(json_dados.decode('utf-8'))
             print("\n" + json.dumps(lista, indent=4))
             print("-" * 40)
-            print(f"Total de Arquivos: **{len(lista)}**")
+            print(f"Total de Arquivos: {len(lista)}")
 
-    # UPLOAD 
     elif escolha == '3':
-        nome_arquivo = input('Arquivo LOCAL: ').strip()
-        if not os.path.exists(nome_arquivo): sys.exit("Erro: Arquivo não existe.")
-            
+        nome_arquivo = input('Digite o nome do arquivo LOCAL para upload: ').strip()
+        if not os.path.exists(nome_arquivo):
+            print("Erro: Arquivo local não encontrado.")
+            sys.exit(1)
+        tam_arquivo = os.path.getsize(nome_arquivo)
         tcp_socket.send(b'\x1e') 
         nome_bytes = nome_arquivo.encode('utf-8')
         tcp_socket.send(len(nome_bytes).to_bytes(4, 'big'))
         tcp_socket.send(nome_bytes)
 
         if tcp_socket.recv(1) == b'\x00':
-            tam_arquivo = os.path.getsize(nome_arquivo)
             tcp_socket.send(tam_arquivo.to_bytes(4, 'big'))
+            print(f" Iniciando upload de '{nome_arquivo}'. Tamanho: {tam_arquivo} bytes.")
             with open(nome_arquivo, 'rb') as f:
                 while (chunk := f.read(BUFFER_SIZE)):
                     tcp_socket.sendall(chunk)
             if tcp_socket.recv(1) == b'\x00':
-                print(" Sucesso no Upload.")
+                print(f" Sucesso no Upload: Total de {tam_arquivo} bytes enviados.")
 
 except Exception as e:
-    print(f" Erro: {e}")
+    print(f" Ocorreu um erro: {e}")
 finally:
     tcp_socket.close()
+    print(" Conexão encerrada.")

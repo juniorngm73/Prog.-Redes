@@ -11,8 +11,9 @@ print(f" Servidor TCP escutando em {HOST}:{PORT}...")
 
 def get_lista_arquivos_json():
     arquivos_info = []
+    # Evita listar o próprio script do servidor se necessário
     for f in os.listdir('.'):
-        if os.path.isfile(f) and f not in ('servidor.py', 'cliente.py'):
+        if os.path.isfile(f):
             tamanho = os.path.getsize(f)
             arquivos_info.append({"nome": f, "tamanho_bytes": tamanho})
     return json.dumps(arquivos_info, indent=4)
@@ -21,7 +22,7 @@ while True:
     con = None
     try:
         con, cliente = server_socket.accept()
-        print('\n\n-- Conectado por:', cliente)
+        print('\n-- Conectado por:', cliente)
 
         op_byte = con.recv(1)
         if not op_byte: continue
@@ -34,31 +35,30 @@ while True:
             print(f" Solicitação recebida: '{nome_arquivo}'")
             
             if os.path.exists(nome_arquivo):
-                print(f" Arquivo '{nome_arquivo}' encontrado. Iniciando envio.")
-                con.send(b'\x00') # INVERTIDO: 0 = Encontrado
                 tam_arquivo = os.path.getsize(nome_arquivo)
+                print(f" Arquivo '{nome_arquivo}' encontrado. Iniciando envio. Tamanho: {tam_arquivo} bytes.")
+                con.send(b'\x00') 
                 con.send(tam_arquivo.to_bytes(4, 'big'))
 
+                bytes_enviados = 0
                 with open(nome_arquivo, 'rb') as f:
-                    bytes_enviados = 0
                     while (chunk := f.read(BUFFER_SIZE)):
                         con.sendall(chunk)
                         bytes_enviados += len(chunk)
-                print(f" Transferência de '{nome_arquivo}' completa.")
+                print(f" Transferência de '{nome_arquivo}' completa. Total de {bytes_enviados} bytes enviados.")
             else:
                 print(f" Arquivo '{nome_arquivo}' não encontrado.")
-                con.send(b'\x01') # INVERTIDO: 1 = Não encontrado
+                con.send(b'\x01')
 
         # LISTAGEM
         elif operacao == 20:
             print(" Solicitação recebida: 'Listar_Arquivos'")
             json_str = get_lista_arquivos_json()
             json_bytes = json_str.encode('utf-8')
-            
-            con.send(b'\x00') # INVERTIDO: 0 = Sucesso
+            con.send(b'\x00') 
             con.send(len(json_bytes).to_bytes(4, 'big'))
             con.sendall(json_bytes)
-            print(f" JSON de listagem enviado.")
+            print(f" JSON de listagem enviado ({len(json_bytes)} bytes).")
 
         # UPLOAD
         elif operacao == 30:
@@ -66,7 +66,7 @@ while True:
             nome_arquivo = con.recv(tam_nome).decode('utf-8')
             print(f" Solicitação recebida: 'Upload_Arquivo:{nome_arquivo}'")
             
-            con.send(b'\x00') # INVERTIDO: 0 = OK (Pode enviar)
+            con.send(b'\x00') 
             tam_arquivo = int.from_bytes(con.recv(4), 'big')
             
             bytes_recebidos = 0
@@ -78,11 +78,15 @@ while True:
                     bytes_recebidos += len(chunk)
             
             if bytes_recebidos == tam_arquivo:
-                con.send(b'\x00') # INVERTIDO: 0 = Sucesso
+                con.send(b'\x00') 
+                print(f" Upload de '{nome_arquivo}' completo. Total de {bytes_recebidos} bytes recebidos.")
             else:
-                con.send(b'\x01') # INVERTIDO: 1 = Falha
+                con.send(b'\x01')
+                print(f" Erro: Recebidos {bytes_recebidos} de {tam_arquivo} bytes.")
 
     except Exception as e:
         print(f" Erro: {e}")
     finally:
-        if con: con.close()
+        if con:
+            con.close()
+            print(f" Conexão com {cliente} encerrada.")
