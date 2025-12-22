@@ -1,4 +1,4 @@
-2import socket, os, sys, json
+import socket, os, sys, json
 
 if len(sys.argv) != 2:
     print("Uso correto: python cliente.py <ip>:<porta>")
