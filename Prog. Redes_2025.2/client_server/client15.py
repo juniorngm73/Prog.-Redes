@@ -59,21 +59,34 @@ try:
         nome_arquivo = input('Digite o nome do arquivo LOCAL para upload: ').strip()
         if not os.path.exists(nome_arquivo):
             print("Erro: Arquivo local não encontrado.")
-            sys.exit(1)
-        tam_arquivo = os.path.getsize(nome_arquivo)
-        tcp_socket.send(b'\x1e') 
-        nome_bytes = nome_arquivo.encode('utf-8')
-        tcp_socket.send(len(nome_bytes).to_bytes(4, 'big'))
-        tcp_socket.send(nome_bytes)
+        else:
+            tam_arquivo = os.path.getsize(nome_arquivo)
+            tcp_socket.send(b'\x1e')  # Envia comando 30
+            
+            # Envia nome do arquivo
+            nome_bytes = nome_arquivo.encode('utf-8')
+            tcp_socket.send(len(nome_bytes).to_bytes(4, 'big'))
+            tcp_socket.send(nome_bytes)
 
-        if tcp_socket.recv(1) == b'\x00':
-            tcp_socket.send(tam_arquivo.to_bytes(4, 'big'))
-            print(f" Iniciando upload de '{nome_arquivo}'. Tamanho: {tam_arquivo} bytes.")
-            with open(nome_arquivo, 'rb') as f:
-                while (chunk := f.read(BUFFER_SIZE)):
-                    tcp_socket.sendall(chunk)
-            if tcp_socket.recv(1) == b'\x00':
-                print(f" Sucesso no Upload: Total de {tam_arquivo} bytes enviados.")
+            # ESPERA o servidor dizer que recebeu o nome e está pronto
+            confirmacao = tcp_socket.recv(1)
+            if confirmacao == b'\x00':
+                # Agora envia o tamanho do conteúdo
+                tcp_socket.send(tam_arquivo.to_bytes(4, 'big'))
+                
+                print(f" Enviando '{nome_arquivo}' ({tam_arquivo} bytes)...")
+                with open(nome_arquivo, 'rb') as f:
+                    while True:
+                        chunk = f.read(BUFFER_SIZE)
+                        if not chunk:
+                            break
+                        tcp_socket.sendall(chunk)
+                
+                # ESPERA o servidor confirmar que salvou tudo
+                if tcp_socket.recv(1) == b'\x00':
+                    print(f" Upload concluído com sucesso!")
+                else:
+                    print(" Erro: O servidor não confirmou o recebimento total.")
 
 except Exception as e:
     print(f" Ocorreu um erro: {e}")
