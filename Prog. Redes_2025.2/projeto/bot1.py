@@ -55,22 +55,22 @@ def responder(token, chat_id, mensagem):
     if "/agentes" in mensagem:
         resposta = "Apresenta os IPs das máquinas em que existem agentes de monitoramento instalados."
     elif "/procs" in mensagem:
-        ip = mensagem.split(":")[1]
+        ip = mensagem.split(" ")[1]
         resposta = f"Recebe um IP (seguindo o comando, separado por espaço ) e lista o número de processos, o pid e o nome dos processos executando nessa máquina. {ip}."
     elif "/proc" in mensagem:
         resposta = "Recebe um IP e um PID (seguindo o comando, separados por espaço) e lista informações sobre o processo na máquina, como: o pid, o nome o uso de memória (em MB) e o uso da CPU (em percentual)"
     elif "/topcpu" in mensagem:
-        ip = mensagem.split(":")[1]
+        ip = mensagem.split(" ")[1]
         resposta = f"Recebe um IP e lista os cinco processos que mais estão usando a CPU na máquina, bem como os percentuais {ip}."
     elif "/topmen" in mensagem:
         resposta = "Recebe um IP (seguindo o comando, separado por espaço) e lista os cinco processos que mais estão usando memória na máquina (bem como o valor usado)"
     elif "/histcpu" in mensagem:
-        ip = mensagem.split(":")[1]
+        ip = mensagem.split(" ")[1]
         resposta = f" Recebe um IP e lista os dez processos que mais usaram a CPU no último minuto, sendo uma coleta a cada 5 segundos {ip}."
     elif "/hardw" in mensagem:
         resposta = "Recebe um IP e mostra informações sobre o hardware da máquina {ip}"
     elif "/eval" in mensagem:
-        ip = mensagem.split(":")[1]
+        ip = mensagem.split(" ")[1]
         resposta = f" Recebe um IP e devolve o resultado de análise da situação da máquina por uma LLM (gemini, por exemplo). Nesse procedimento, envie as informações similares àquelas obtidas em /topmem, /topcpu e /hardw e solicite a avaliação à LLM – a resposta dela deve ser devolvida ao usuário. USAR REQUESTS PARA EFETUAR ESSA OPERAÇÃO JUNTO A UMA LLM.{ip}."
     else:
         resposta = msg
