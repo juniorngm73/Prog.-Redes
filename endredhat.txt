@@ -8,4 +8,8 @@ https://github.com/juniorngm73/Treinamento/tree/main/projeto-asa/isp
 
 token 2026
 
-token = '8000212618:AAFKBerXM7QTyGTu-WQ_Ey928a8Oc_LSHyY'
+token_telegram = '8000212618:AAFKBerXM7QTyGTu-WQ_Ey928a8Oc_LSHyY'
+
+Api Gemini
+
+token_gemini = 'AIzaSyDnmbaMhq1anBfkMxMpIojDEWNDBekE0UE'
