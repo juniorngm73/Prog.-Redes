@@ -1,5 +1,4 @@
-import json
-import sys, requests
+import json, sys, requests
 
 # Token do Bot
 token = '8000212618:AAFKBerXM7QTyGTu-WQ_Ey928a8Oc_LSHyY'
