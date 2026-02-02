@@ -1,9 +1,4 @@
-import socket
-import psutil
-import json
-import struct
-import sys
-import time
+import socket, psutil, json, struct, sys, time
 
 def get_hardware_info():
     """Coleta ao menos 5 elementos de hardware conforme o enunciado."""

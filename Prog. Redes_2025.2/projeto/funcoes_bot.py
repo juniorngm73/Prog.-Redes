@@ -1,7 +1,4 @@
-import struct
-import json
-import requests
-import time
+import struct, json, requests, time
 
 # Substitua pela sua chave real
 GEMINI_API_KEY = ''
