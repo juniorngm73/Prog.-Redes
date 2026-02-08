@@ -12,4 +12,10 @@ token_telegram = '8000212618:AAFKBerXM7QTyGTu-WQ_Ey928a8Oc_LSHyY'
 
 Api Gemini
 
-token_gemini = 'AIzaSyDnmbaMhq1anBfkMxMpIojDEWNDBekE0UE'
+token_gemini = 'AIzaSyD9U_iVEiRhJ4BJS8KkB5BgFeY1AacZSUs'
+
+                
+
+erro 
+
+erro API 400: models/gemini-1.5 flash is not found for api version v1 beta, or is not supported for generate content. Call list models to see the list of available models and their supported methods.
