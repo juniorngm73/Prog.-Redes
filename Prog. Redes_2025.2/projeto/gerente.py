@@ -1,8 +1,4 @@
-import socket
-import threading
-import requests
-import time
-from funcoes_bot import processar_comando
+import socket, threading, requests, time, funcoes_bot
 
 # Dicionário global para rastrear agentes ativos { IP: socket }
 agentes_ativos = {}
@@ -12,13 +8,13 @@ TOKEN_TELEGRAM = ''
 
 def bot_loop():
     """Loop para buscar atualizações do Telegram a cada 1s (conforme pedido)"""
-    last_update_id = 0
+    atualizacao_id = 0
     print("[BOT] Sistema de monitoramento via Telegram iniciado.")
     
     while True:
         try:
             # timeout=10 ajuda a não sobrecarregar a rede, mas o sleep(1) no final garante o requisito
-            url = f"https://api.telegram.org/bot{TOKEN_TELEGRAM}/getUpdates?offset={last_update_id + 1}&timeout=5"
+            url = f"https://api.telegram.org/bot{TOKEN_TELEGRAM}/getUpdates?offset={atualizacao_id + 1}&timeout=5"
             response = requests.get(url, timeout=10)
             r = response.json()
 
@@ -32,9 +28,9 @@ def bot_loop():
                         
                         print(f"[BOT] Comando recebido: {texto}")
                         
-                        # Processamento do comando
+                        
                         try:
-                            resposta = processar_comando(texto, agentes_ativos)
+                            resposta = funcoes_bot.processar_comando(texto, agentes_ativos)
                         except Exception as e:
                             resposta = f"Erro interno ao processar comando: {e}"
                         
@@ -47,9 +43,9 @@ def bot_loop():
         except Exception as e:
             print(f"[ERRO BOT] Falha na comunicação com Telegram: {e}")
         
-        time.sleep(1) # Requisito: buscar pedidos a cada 1s
+        time.sleep(2) # Requisito: buscar pedidos a cada 2s
 
-def handle_agente(conn, addr):
+def atender_agente(conn, addr):
     """Thread dedicada para cada agente conectado"""
     ip_cliente = addr[0]
     print(f"[REDE] Nova conexão: Agente em {addr}")
@@ -91,8 +87,8 @@ def main():
         while True:
             conn, addr = server.accept()
             # Cria uma thread para manter a conexão com o agente
-            # Conforme o enunciado: "Deve manter uma thread aberta com cada agente"
-            thread_agente = threading.Thread(target=handle_agente, args=(conn, addr), daemon=True)
+            # Mantém uma thread aberta com cada agente"
+            thread_agente = threading.Thread(target=atender_agente, args=(conn, addr), daemon=True)
             thread_agente.start()
             
     except Exception as e:

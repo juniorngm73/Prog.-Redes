@@ -1,0 +1,21 @@
+Ordem de Execução
+Inicie o Gerente: Ele precisa estar rodando primeiro para "abrir a porta" 45678.
+
+python gerente.py
+
+Inicie o(s) Agente(s): Em cada máquina que você quer monitorar (ou em terminais diferentes na mesma máquina), execute o agente passando o IP de onde o Gerente está rodando.
+
+python agente.py 127.0.0.1 (se estiver tudo na mesma máquina).
+
+Abra o Telegram: Mande um /agentes para o seu bot e ele deve listar o IP do agente que acabou de conectar.
+
+O que você pode testar agora:
+Teste de Estresse: Mande o comando /procs <IP> e veja se a lista de processos chega rápido.
+
+Teste da IA: Mande o comando /eval <IP>. O Gerente vai buscar os dados de Hardware, CPU e Memória, enviar para o Gemini e te dar um resumo técnico.
+
+Dica técnica: Se você for rodar o agente em máquinas diferentes, lembre-se de conferir se o Firewall da máquina do Gerente permite conexões de entrada na porta 45678.
+
+Se surgir algum erro de "Connection Refused", geralmente é o Firewall ou o IP do Gerente que foi digitado errado no Agente.
+
+Precisando de qualquer ajuste na formatação das mensagens do Telegram (deixar em negrito, tabelas, etc.), é só me chamar!
