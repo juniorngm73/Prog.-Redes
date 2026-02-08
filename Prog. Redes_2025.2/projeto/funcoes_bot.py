@@ -1,6 +1,6 @@
 import struct, json, requests
 
-GEMINI_API_KEY = 'AIzaSyDnmbaMhq1anBfkMxMpIojDEWNDBekE0UE'
+GEMINI_API_KEY = 
 
 def solicitar_agente(sock, comando, params=None):
     try:

@@ -3,7 +3,7 @@ import socket, threading, requests, time, funcoes_bot
 # Dicionário global para rastrear agentes ativos { IP: socket }
 agentes_ativos = {}
 
-TOKEN_TELEGRAM = '8000212618:AAFKBerXM7QTyGTu-WQ_Ey928a8Oc_LSHyY'
+TOKEN_TELEGRAM = ''
 
 def bot_loop():
     """Loop para buscar atualizações do Telegram com limpeza inicial"""
