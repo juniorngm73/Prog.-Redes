@@ -3,82 +3,77 @@ import socket, threading, requests, time, funcoes_bot
 # Dicionário global para rastrear agentes ativos { IP: socket }
 agentes_ativos = {}
 
-# CONFIGURAÇÕES - Preencha com seus dados
-TOKEN_TELEGRAM = ''
+TOKEN_TELEGRAM = '8000212618:AAFKBerXM7QTyGTu-WQ_Ey928a8Oc_LSHyY'
 
 def bot_loop():
-    """Loop para buscar atualizações do Telegram a cada 1s (conforme pedido)"""
+    """Loop para buscar atualizações do Telegram com limpeza inicial"""
     atualizacao_id = 0
-    print("[BOT] Sistema de monitoramento via Telegram iniciado.")
+    print("[BOT] Fazendo limpeza de mensagens antigas...")
+    
+    try:
+        url_limpeza = f"https://api.telegram.org/bot{TOKEN_TELEGRAM}/getUpdates"
+        res = requests.get(url_limpeza, params={"timeout": 0}, timeout=10).json()
+        if res.get("ok") and res.get("result"):
+            atualizacao_id = res["result"][-1]["update_id"]
+            print(f"[BOT] {len(res['result'])} mensagens antigas ignoradas.")
+    except Exception as e:
+        print(f"[BOT] Erro na limpeza: {e}")
+    
+    print("[BOT] Sistema de monitoramento pronto e aguardando novos comandos.")
     
     while True:
         try:
-            # timeout=10 ajuda a não sobrecarregar a rede, mas o sleep(1) no final garante o requisito
-            url = f"https://api.telegram.org/bot{TOKEN_TELEGRAM}/getUpdates?offset={atualizacao_id + 1}&timeout=5"
-            response = requests.get(url, timeout=10)
+            url = f"https://api.telegram.org/bot{TOKEN_TELEGRAM}/getUpdates"
+            params = {"offset": atualizacao_id + 1, "timeout": 10}
+            
+            response = requests.get(url, params=params, timeout=15)
             r = response.json()
 
             if r.get("ok") and r.get("result"):
                 for update in r["result"]:
-                    last_update_id = update["update_id"]
+                    atualizacao_id = update["update_id"]
                     
                     if "message" in update and "text" in update["message"]:
                         chat_id = update["message"]["chat"]["id"]
                         texto = update["message"]["text"]
                         
-                        print(f"[BOT] Comando recebido: {texto}")
+                        # LOGS DE COMANDO RESTAURADOS
+                        print(f"[BOT] Processando comando: '{texto}' de Chat ID: {chat_id}")
                         
+                        resposta = funcoes_bot.processar_comando(texto, agentes_ativos)
                         
-                        try:
-                            resposta = funcoes_bot.processar_comando(texto, agentes_ativos)
-                        except Exception as e:
-                            resposta = f"Erro interno ao processar comando: {e}"
-                        
-                        # Envio da resposta ao usuário
-                        requests.post(
-                            f"https://api.telegram.org/bot{TOKEN_TELEGRAM}/sendMessage", 
-                            json={"chat_id": chat_id, "text": str(resposta)},
-                            timeout=5
-                        )
+                        send_url = f"https://api.telegram.org/bot{TOKEN_TELEGRAM}/sendMessage"
+                        send_payload = {"chat_id": chat_id, "text": str(resposta)}
+                        requests.post(send_url, json=send_payload, timeout=10)
+            
         except Exception as e:
-            print(f"[ERRO BOT] Falha na comunicação com Telegram: {e}")
-        
-        time.sleep(2) # Requisito: buscar pedidos a cada 2s
+            print(f"[ERRO BOT]: {e}")
+            time.sleep(2)
 
 def atender_agente(conn, addr):
-    """Thread dedicada para cada agente conectado"""
     ip_cliente = addr[0]
     print(f"[REDE] Nova conexão: Agente em {addr}")
-    
-    # Adiciona ao dicionário de agentes ativos
     agentes_ativos[ip_cliente] = conn
     
     try:
-        # Mantém a thread viva enquanto o socket estiver aberto
-        # O recv(1, MSG_PEEK) verifica se a conexão caiu sem remover dados do buffer
         while True:
-            # Sockets em modo bloqueante esperam aqui
-            data = conn.recv(1, socket.MSG_PEEK)
-            if not data:
-                break 
-            time.sleep(2) # Verifica integridade a cada 2s
-    except (ConnectionResetError, BrokenPipeError, socket.error):
-        print(f"[REDE] Conexão perdida abruptamente com {ip_cliente}")
+            # Detecta se a conexão caiu
+            if not conn.recv(1, socket.MSG_PEEK):
+                break
+            time.sleep(5) 
+    except Exception:
+        pass
     finally:
         print(f"[REDE] Removendo agente: {ip_cliente}")
-        if ip_cliente in agentes_ativos:
-            del agentes_ativos[ip_cliente]
+        agentes_ativos.pop(ip_cliente, None)
         conn.close()
 
 def main():
-    # Inicia o bot em uma thread separada
     thread_bot = threading.Thread(target=bot_loop, daemon=True)
     thread_bot.start()
     
-    # Configuração do Socket Servidor para os Agentes
     try:
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # Permite reutilizar a porta caso o programa seja reiniciado rapidamente
         server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         server.bind(('0.0.0.0', 45678))
         server.listen(10)
@@ -86,8 +81,6 @@ def main():
         
         while True:
             conn, addr = server.accept()
-            # Cria uma thread para manter a conexão com o agente
-            # Mantém uma thread aberta com cada agente"
             thread_agente = threading.Thread(target=atender_agente, args=(conn, addr), daemon=True)
             thread_agente.start()
             
