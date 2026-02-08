@@ -21,11 +21,8 @@ def solicitar_agente(sock, comando, params=None):
     except: return None
 
 def chamada_gemini(prompt):
-    
     url = f"https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
-    
     headers = {'Content-Type': 'application/json'}
-    
     payload = {
         "contents": [
             {
@@ -55,12 +52,10 @@ def processar_comando(texto, agentes):
     if not partes: return "Comando vazio."
     cmd = partes[0].lower()
 
-    # --- Comandos que NÃO exigem IP ---
-
     # Comando /start
     if cmd == "/start":
-        return (" **Comandos disponíveis:**\n\n"
-                "/start - Mostra esta lista de comandos\n"
+        return ("**Comandos disponíveis:**\n\n"
+                "/start - Lista de comandos\n"
                 "/agentes - Lista os agentes online\n"
                 "/procs <IP> - Lista processos ativos\n"
                 "/proc <IP> <PID> - Detalhes de um processo\n"
@@ -73,7 +68,11 @@ def processar_comando(texto, agentes):
     # Comando /agentes
     if cmd == "/agentes":
         if not agentes: return "Nenhum agente conectado no momento."
-        return " Agentes online:\n" + "\n".join(agentes.keys())
+        
+        lista_ips = ""
+        for ip_chave in agentes.keys():
+            lista_ips += ip_chave + "\n"
+        return " Agentes online:\n" + lista_ips
 
     # --- Comandos que EXIGEM IP ---
     if len(partes) < 2:
@@ -89,8 +88,13 @@ def processar_comando(texto, agentes):
     if cmd == "/procs":
         data = solicitar_agente(sock, 'G')
         if not data: return "Falha ao obter processos."
-        lista = [f"{p['pid']}: {p['nome']}" for p in data[:15]]
-        return " Lista de Processos:\n" + "\n".join(lista) + f"\n... (Total: {len(data)})"
+        
+        lista_formatada = []
+        
+        for p in data[:15]:
+            lista_formatada.append(f"{p['pid']}: {p['nome']}")
+        
+        return "Lista de Processos:\n" + "\n".join(lista_formatada) + f"\n... (Total: {len(data)})"
 
     # /proc
     elif cmd == "/proc":
@@ -105,13 +109,26 @@ def processar_comando(texto, agentes):
     elif cmd == "/topcpu":
         data = solicitar_agente(sock, 'C')
         if not data: return "Erro ao obter Top CPU."
-        return " Top 5 CPU:\n" + "\n".join([f"PID {p['pid']}: {p.get('perc', p.get('cpu_percent'))}%" for p in data])
+        
+        linhas = []
+        for p in data:
+            
+            valor = p.get('perc', p.get('cpu_percent'))
+            linhas.append(f"PID {p['pid']}: {valor}%")
+        
+        return " Top 5 CPU:\n" + "\n".join(linhas)
 
     # /topmem
     elif cmd == "/topmem":
         data = solicitar_agente(sock, 'M')
         if not data: return "Erro ao obter Top Memória."
-        return " Top 5 Memória:\n" + "\n".join([f"PID {p['pid']}: {p.get('perc', p.get('memory_percent'))}%" for p in data])
+        
+        linhas = []
+        for p in data:
+            valor = p.get('perc', p.get('memory_percent'))
+            linhas.append(f"PID {p['pid']}: {valor}%")
+            
+        return " Top 5 Memória:\n" + "\n".join(linhas)
 
     # /hardw
     elif cmd == "/hardw":
@@ -125,7 +142,12 @@ def processar_comando(texto, agentes):
     elif cmd == "/histcpu":
         data = solicitar_agente(sock, 'G')
         if not data: return "Erro ao obter dados."
-        return " Histórico (Última amostra):\n" + "\n".join([f"{p['nome']}" for p in data[:10]])
+        
+        amostra = []
+        for p in data[:10]:
+            amostra.append(p['nome'])
+            
+        return " Histórico (Última amostra):\n" + "\n".join(amostra)
 
     # /eval
     elif cmd == "/eval":

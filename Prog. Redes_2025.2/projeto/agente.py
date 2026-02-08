@@ -35,12 +35,17 @@ def processar_requisicoes(s):
                 try:
                     p = psutil.Process(pid)
                     with p.oneshot():
-                        conns = [{"remote": c.raddr.ip, "status": c.status} for c in p.net_connections(kind='tcp') if c.raddr]
+                        conns = []
+                        for c in p.net_connections(kind='tcp'):
+                            if c.raddr:
+                                conns.append({"remote": c.raddr.ip, "status": c.status})
+                        
                         response_data = {
                             "ok": True, "pid": pid, "nome": p.name(),
                             "path": p.exe() if hasattr(p, 'exe') else "N/A",
                             "mem": p.memory_info().rss // (1024**2),
-                            "cpu": p.cpu_percent(interval=0.1), "connections": conns
+                            "cpu": p.cpu_percent(interval=0.1), 
+                            "connections": conns
                         }
                 except: response_data = {"ok": False}
 
@@ -56,7 +61,15 @@ def processar_requisicoes(s):
                 for p in psutil.process_iter(['pid', 'memory_percent']):
                     try: procs.append(p.info)
                     except: continue
-                response_data = [{"pid": i['pid'], "perc": round(i['memory_percent'], 2)} for i in sorted(procs, key=lambda x: x['memory_percent'], reverse=True)[:5]]
+                
+                ordenados = sorted(procs, key=lambda x: x['memory_percent'], reverse=True)[:5]
+                
+                lista_top_mem = []
+                for i in ordenados:
+                    dado = {"pid": i['pid'], "perc": round(i['memory_percent'], 2)}
+                    lista_top_mem.append(dado)
+                
+                response_data = lista_top_mem
 
             elif cmd == 'H': # Hardware
                 response_data = info_hardware()

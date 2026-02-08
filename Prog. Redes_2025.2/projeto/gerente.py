@@ -6,16 +6,15 @@ agentes_ativos = {}
 TOKEN_TELEGRAM = ''
 
 def bot_loop():
-    """Loop para buscar atualizações do Telegram com limpeza inicial"""
+    # Atualizações do Telegram 
     atualizacao_id = 0
-    print("[BOT] Fazendo limpeza de mensagens antigas...")
-    
+        
     try:
         url_limpeza = f"https://api.telegram.org/bot{TOKEN_TELEGRAM}/getUpdates"
         res = requests.get(url_limpeza, params={"timeout": 0}, timeout=10).json()
         if res.get("ok") and res.get("result"):
             atualizacao_id = res["result"][-1]["update_id"]
-            print(f"[BOT] {len(res['result'])} mensagens antigas ignoradas.")
+           # print(f"[BOT] {len(res['result'])} mensagens antigas ignoradas.")
     except Exception as e:
         print(f"[BOT] Erro na limpeza: {e}")
     
