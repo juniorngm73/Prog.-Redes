@@ -1,6 +1,6 @@
 import struct, json, requests
 
-GEMINI_API_KEY = ''
+GEMINI_API_KEY = 
 
 def solicitar_agente(sock, comando, params=None):
     try:
@@ -21,17 +21,19 @@ def solicitar_agente(sock, comando, params=None):
     except: return None
 
 def chamada_gemini(prompt):
-    url = f"https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
+    
     headers = {'Content-Type': 'application/json'}
+    
+    # Payload rigorosamente seguindo a documentação v1beta
     payload = {
-        "contents": [
-            {
-                "parts": [{"text": prompt}]
-            }
-        ]
+        "contents": [{
+            "parts": [{"text": prompt}]
+        }]
     }
     
     try:
+        # Usamos json=payload para o requests cuidar da conversão
         r = requests.post(url, json=payload, headers=headers, timeout=15)
         res_json = r.json()
         
@@ -39,14 +41,17 @@ def chamada_gemini(prompt):
             msg_erro = res_json.get('error', {}).get('message', 'Erro desconhecido')
             return f"Erro API ({r.status_code}): {msg_erro}"
 
+        # Verificação segura da hierarquia do JSON de resposta
         if 'candidates' in res_json and len(res_json['candidates']) > 0:
-            return res_json['candidates'][0]['content']['parts'][0]['text']
-        else:
-            return "O modelo não retornou uma resposta válida."
+            parts = res_json['candidates'][0].get('content', {}).get('parts', [])
+            if parts:
+                return parts[0].get('text', 'Resposta sem texto.')
+        
+        return "O modelo não retornou dados (possível bloqueio de segurança/filtro)."
             
     except Exception as e:
         return f"Erro ao consultar a LLM: {e}"
-
+    
 def processar_comando(texto, agentes):
     partes = texto.split()
     if not partes: return "Comando vazio."

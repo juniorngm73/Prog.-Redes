@@ -2,7 +2,7 @@ import socket, threading, requests, time, funcoes_bot
 
 agentes_ativos = {}
 
-TOKEN_TELEGRAM = ''
+TOKEN_TELEGRAM =
 
 def bot_loop():
     # Atualizações do Telegram 
