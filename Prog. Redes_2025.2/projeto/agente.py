@@ -71,7 +71,7 @@ def processar_requisicoes(s):
                 
                 response_data = lista_top_mem
 
-            elif cmd == 'H': # Hardware
+            elif cmd == 'H': # Hardware Informações
                 response_data = info_hardware()
 
             if response_data is not None:

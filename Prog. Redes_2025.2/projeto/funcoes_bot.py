@@ -74,7 +74,7 @@ def processar_comando(texto, agentes):
             lista_ips += ip_chave + "\n"
         return " Agentes online:\n" + lista_ips
 
-    # --- Comandos que EXIGEM IP ---
+    # Comandos que Solicitam IP 
     if len(partes) < 2:
         return f"Uso: {cmd} <IP>"
     

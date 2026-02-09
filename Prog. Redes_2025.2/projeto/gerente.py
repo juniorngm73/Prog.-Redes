@@ -1,6 +1,5 @@
 import socket, threading, requests, time, funcoes_bot
 
-# Dicionário global para rastrear agentes ativos { IP: socket }
 agentes_ativos = {}
 
 TOKEN_TELEGRAM = ''
@@ -14,11 +13,11 @@ def bot_loop():
         res = requests.get(url_limpeza, params={"timeout": 0}, timeout=10).json()
         if res.get("ok") and res.get("result"):
             atualizacao_id = res["result"][-1]["update_id"]
-           # print(f"[BOT] {len(res['result'])} mensagens antigas ignoradas.")
+           
     except Exception as e:
         print(f"[BOT] Erro na limpeza: {e}")
     
-    print("[BOT] Sistema de monitoramento pronto e aguardando novos comandos.")
+    print("[BOT] Sistema de Monitoramento pronto e aguardando novos comandos.")
     
     while True:
         try:
@@ -36,7 +35,6 @@ def bot_loop():
                         chat_id = update["message"]["chat"]["id"]
                         texto = update["message"]["text"]
                         
-                        # LOGS DE COMANDO RESTAURADOS
                         print(f"[BOT] Processando comando: '{texto}' de Chat ID: {chat_id}")
                         
                         resposta = funcoes_bot.processar_comando(texto, agentes_ativos)
